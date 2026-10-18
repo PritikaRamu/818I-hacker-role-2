@@ -1,0 +1,42 @@
+# Source: release/VulGenie.zip :: VulGenie/VulGenie-RET/patchExtractor/LLMInteractor/PromptGenerator.py :: generate_prompt_for_protect_rule(patch_context) line 255
+# Template text below is verbatim; {...} are f-string placeholders.
+Analyze the provided security patch code and:
+1. Identify the core security mechanisms that directly block vulnerability exploitation
+2. For each mechanism, extract:
+   - The original vulnerable code snippet
+   - The security-related variables and methods implementing the defense
+   - Estimate the defense level of security-related variables or functions (rate from 0 to 10, with higher scores indicating better security)
+   - The defense types of security-related variables or functions, including :
+        - (1) sanity checks
+        - (2) string sanitization
+        - (3) object property settings (e.g., security attributes)
+        - (4) variable boundary constraints
+        - (5) global security variables.
+    You can add other defense types as needed.
+3. Prioritize mechanisms that neutralize code execution risks, focus on defenses directly related to vulnerabilities.
+[Commit]: a diff of Java code changes. Lines prefixed with - indicate removed (old, vulnerable) code, and lines prefixed with + indicate added (new, fixed) code.
+"{patch_context}"
+
+Format the output as XML with this structure:
+```xml
+<DefenseRule language="java">
+    <DefenseMechanism>
+        <CodeSnippet>
+            <Value></Value> # Original Code Snippet, Keep the +/− signs in the code
+        </CodeSnippet>
+        <Variables>
+            <Variable>
+                <isLocal></isLocal> # true: local variable; false: objects' field
+                <Name></Name> # Defense Variable Name; If the protection strategy applies to a specific field of this variable, record the field name (e.g., student.age, this.name)
+                <BelongMethodName></BelongMethodName> # The Method Name Where the Variable is Located (e.g., getXPathValues). Fill with None if Not Found
+                <RelatedMethodName></RelatedMethodName> # If the protection strategy calls a method related to the defense variable, record the method name. Fill with None if Not Found
+                <Level></Level> # Defense Level
+                <Type></Type> # Defense Type
+            </Variable>
+           ... # Other Defense Variables
+        </Variables>
+        <SecurityImpact></SecurityImpact> # Explain how to block attacks
+    </DefenseMechanism>
+</DefenseRule>
+```
+Return only the data in XML format, no other words.

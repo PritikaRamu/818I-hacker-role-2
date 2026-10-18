@@ -1,0 +1,92 @@
+[
+  {
+    "patch_id": "CVE-2018-20059",
+    "cve": "CVE-2018-20059",
+    "vuln_type": "XML External Entity (XXE)",
+    "defense_method": "setProperty",
+    "sink_method": "unmarshal",
+    "source": "release/ASRDataset.zip :: ASRDataset/GroundTruth/CVE-2018-20059/usage_pairs/CVE-2018-20059-ContextCheck-ea926906cc0380ca5b4a658d65802b1e-{diff,unpatched,patched}.java",
+    "pre": "// Methods Declaration\n@Override\n@SuppressWarnings(\"unchecked\")\npublic <T> T fromString(String content, Class<T> classOfT) {\n        XMLInputFactory xmlInputFactory = XMLInputFactory.newFactory();\n        XMLStreamReader xmlStreamReader = xmlInputFactory.createXMLStreamReader(reader);\n        return (T) unmarshaller.unmarshal(xmlStreamReader);\n",
+    "post": "// Methods Declaration\n@Override\n@SuppressWarnings(\"unchecked\")\npublic <T> T fromString(String content, Class<T> classOfT) {\n        XMLInputFactory xmlInputFactory = XMLInputFactory.newFactory();\n        xmlInputFactory.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, false);\n        xmlInputFactory.setProperty(XMLInputFactory.SUPPORT_DTD, true);\n        XMLStreamReader xmlStreamReader = xmlInputFactory.createXMLStreamReader(reader);\n        return (T) unmarshaller.unmarshal(xmlStreamReader);\n"
+  },
+  {
+    "patch_id": "CVE-2019-5312",
+    "cve": "CVE-2019-5312",
+    "vuln_type": "XML External Entity (XXE)",
+    "defense_method": "setFeature",
+    "sink_method": "parse",
+    "source": "release/ASRDataset.zip :: ASRDataset/GroundTruth/CVE-2019-5312/usage_pairs/CVE-2019-5312-ContextCheck-6a2750a8ad411aa151b2ee95994d8ae4-{diff,unpatched,patched}.java",
+    "pre": "// Methods Declaration\nprivate Document getXmlDoc() {\n  if (this.xmlDoc != null) {\n  }\n    final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();\n    factory.setExpandEntityReferences(false);\n    this.xmlDoc = factory.newDocumentBuilder().parse(new ByteArrayInputStream(this.xmlString.getBytes(StandardCharsets.UTF_8)));\n    return xmlDoc;\n}\n",
+    "post": "// Methods Declaration\nprivate Document getXmlDoc() {\n  if (this.xmlDoc != null) {\n  }\n    final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();\n    factory.setExpandEntityReferences(false);\n    factory.setFeature(\"http://apache.org/xml/features/disallow-doctype-decl\", true);\n    this.xmlDoc = factory.newDocumentBuilder().parse(new ByteArrayInputStream(this.xmlString.getBytes(StandardCharsets.UTF_8)));\n    return xmlDoc;\n}\n"
+  },
+  {
+    "patch_id": "CVE-2020-10683",
+    "cve": "CVE-2020-10683",
+    "vuln_type": "XML External Entity (XXE)",
+    "defense_method": "setFeature",
+    "sink_method": "read",
+    "source": "release/ASRDataset.zip :: ASRDataset/GroundTruth/CVE-2020-10683/usage_pairs/CVE-2020-10683-ContextCheck-3f08704edbb1884e61db0c3dd9f5a017-{diff,unpatched,patched}.java",
+    "pre": "// Methods Declaration\npublic static Document parseText(String text) throws DocumentException {\n    SAXReader reader = new SAXReader();\n    Document result = reader.read(source);\n    if (result.getXMLEncoding() == null) {\n        result.setXMLEncoding(encoding);\n    }\n",
+    "post": "// Methods Declaration\npublic static Document parseText(String text) throws DocumentException {\n    SAXReader reader = new SAXReader();\n    try {\n        reader.setFeature(\"http://apache.org/xml/features/nonvalidating/load-external-dtd\", false);\n        reader.setFeature(\"http://xml.org/sax/features/external-general-entities\", false);\n        reader.setFeature(\"http://xml.org/sax/features/external-parameter-entities\", false);\n    } catch (SAXException e) {\n        //Parse with external resources downloading allowed.\n    }\n    Document result = reader.read(source);\n    if (result.getXMLEncoding() == null) {\n        result.setXMLEncoding(encoding);\n    }\n"
+  },
+  {
+    "patch_id": "CVE-2021-3312",
+    "cve": "CVE-2021-3312",
+    "vuln_type": "XML External Entity (XXE)",
+    "defense_method": "setEntityResolver",
+    "sink_method": "read",
+    "source": "release/ASRDataset.zip :: ASRDataset/GroundTruth/CVE-2021-3312/usage_pairs/CVE-2021-3312-VulnModelAnalysis-788cbe49547b64f32f3b7c1fbd502343-{diff,unpatched,patched}.java",
+    "pre": "// Methods Declaration\nprotected List<CmsProperty> tryAddImageSizeFromSvg(byte[] content, List<CmsProperty> properties) {\n    if ((content == null) || (content.length == 0)) {\n    }\n        SAXReader reader = new SAXReader();\n        Document doc = reader.read(new ByteArrayInputStream(content));\n        Element node = (Element)(doc.selectSingleNode(\"/svg\"));\n        if (node != null) {\n            String widthStr = node.attributeValue(\"width\");\n            String heightStr = node.attributeValue(\"height\");\n            SvgSize width = SvgSize.parse(widthStr);\n            SvgSize height = SvgSize.parse(heightStr);\n            if ((width != null) && (height != null) && Objects.equals(width.getUnit(), height.getUnit())) {\n                w = width.getSize();\n                h = height.getSize();\n            } else {\n                String viewboxStr = node.attributeValue(\"viewBox\");\n                if (viewboxStr != null) {\n                    viewboxStr = viewboxStr.replace(\",\", \" \");\n                    String[] viewboxParts = viewboxStr.trim().split(\" +\");\n                    if (viewboxParts.length == 4) {\n                        w = Double.parseDouble(viewboxParts[2]);\n                        h = Double.parseDouble(viewboxParts[3]);\n                    }\n                }\n            if ((w > 0) && (h > 0)) {\n                String propValue = \"w:\" + (int)Math.round(w) + \",h:\" + (int)Math.round(h);\n                propsMap.put(CmsPropertyDefinition.PROPERTY_IMAGE_SIZE,new CmsProperty(CmsPropertyDefinition.PROPERTY_IMAGE_SIZE, null, propValue));\n            }\n",
+    "post": "// Methods Declaration\nprotected List<CmsProperty> tryAddImageSizeFromSvg(byte[] content, List<CmsProperty> properties) {\n    if ((content == null) || (content.length == 0)) {\n    }\n        SAXReader reader = new SAXReader();\n        reader.setEntityResolver(new CmsXmlEntityResolver(null));\n        Document doc = reader.read(new ByteArrayInputStream(content));\n        Element node = (Element)(doc.selectSingleNode(\"/svg\"));\n        if (node != null) {\n            String widthStr = node.attributeValue(\"width\");\n            String heightStr = node.attributeValue(\"height\");\n            SvgSize width = SvgSize.parse(widthStr);\n            SvgSize height = SvgSize.parse(heightStr);\n            if ((width != null) && (height != null) && Objects.equals(width.getUnit(), height.getUnit())) {\n                w = width.getSize();\n                h = height.getSize();\n            } else {\n                String viewboxStr = node.attributeValue(\"viewBox\");\n                if (viewboxStr != null) {\n                    viewboxStr = viewboxStr.replace(\",\", \" \");\n                    String[] viewboxParts = viewboxStr.trim().split(\" +\");\n                    if (viewboxParts.length == 4) {\n                        w = Double.parseDouble(viewboxParts[2]);\n                        h = Double.parseDouble(viewboxParts[3]);\n                    }\n                }\n            if ((w > 0) && (h > 0)) {\n                String propValue = \"w:\" + (int)Math.round(w) + \",h:\" + (int)Math.round(h);\n                propsMap.put(CmsPropertyDefinition.PROPERTY_IMAGE_SIZE,new CmsProperty(CmsPropertyDefinition.PROPERTY_IMAGE_SIZE, null, propValue));\n            }\n"
+  },
+  {
+    "patch_id": "CVE-2023-27480",
+    "cve": "CVE-2023-27480",
+    "vuln_type": "XML External Entity (XXE)",
+    "defense_method": "setFeature",
+    "sink_method": "parse",
+    "source": "release/ASRDataset.zip :: ASRDataset/GroundTruth/CVE-2023-27480/usage_pairs/CVE-2023-27480-ContextCheck-6a2750a8ad411aa151b2ee95994d8ae4-{diff,unpatched,patched}.java",
+    "pre": "// Methods Declaration\npublic void readDescriptor(InputStream stream) throws XarException, IOException\n    DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();\n        dBuilder = dbFactory.newDocumentBuilder();\n        doc = dBuilder.parse(new CloseShieldInputStream(stream));\n    doc.getDocumentElement().normalize();\n    NodeList children = doc.getChildNodes();\n    for (int i = 0; i < children.getLength(); ++i) {\n        Node node = children.item(i);\n        if (node.getNodeType() == Node.ELEMENT_NODE) {\n            Element element = (Element) node;\n            if (element.getTagName().equals(XarModel.ELEMENT_PACKAGE)) {\n            }\n        }\n    }\n",
+    "post": "// Methods Declaration\npublic void readDescriptor(InputStream stream) throws XarException, IOException\n    DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();\n        dbFactory.setFeature(\"http://apache.org/xml/features/disallow-doctype-decl\", true);\n        dBuilder = dbFactory.newDocumentBuilder();\n        doc = dBuilder.parse(new CloseShieldInputStream(stream));\n    doc.getDocumentElement().normalize();\n    NodeList children = doc.getChildNodes();\n    for (int i = 0; i < children.getLength(); ++i) {\n        Node node = children.item(i);\n        if (node.getNodeType() == Node.ELEMENT_NODE) {\n            Element element = (Element) node;\n            if (element.getTagName().equals(XarModel.ELEMENT_PACKAGE)) {\n            }\n        }\n    }\n"
+  },
+  {
+    "patch_id": "CVE-2021-25642",
+    "cve": "CVE-2021-25642",
+    "vuln_type": "Insecure Deserialization",
+    "defense_method": "accept",
+    "sink_method": "readObject",
+    "source": "release/ASRDataset.zip :: ASRDataset/GroundTruth/CVE-2021-25642/usage_pairs/CVE-2021-25642-ContextCheck-4f642135083b0201ce393b87991307b8-{diff,unpatched,patched}.java",
+    "pre": "// Methods Declaration\nprivate static Object deserializeObject(byte[] bytes) throws Exception {\n  try (ByteArrayInputStream bais = new ByteArrayInputStream(bytes);\n     ObjectInputStream ois = new ObjectInputStream(bais);) {\n    return ois.readObject();\n  }\n}\n",
+    "post": "// Methods Declaration\nprivate static Object deserializeObject(byte[] bytes) throws Exception {\n  try (ByteArrayInputStream bais = new ByteArrayInputStream(bytes);\n      ValidatingObjectInputStream ois = new ValidatingObjectInputStream(bais);) {\n   ois.accept(LinkedList.class, LogMutation.class, HashMap.class, String.class);\n    return ois.readObject();\n  }\n}\n"
+  },
+  {
+    "patch_id": "CVE-2024-22399-1",
+    "cve": "CVE-2024-22399",
+    "vuln_type": "Insecure Deserialization",
+    "defense_method": "setSerializerFactory",
+    "sink_method": "readObject",
+    "source": "release/ASRDataset.zip :: ASRDataset/GroundTruth/CVE-2024-22399-1/usage_pairs/CVE-2024-22399-1-ContextCheck-019310968db7d267fc8d6182998ecc75-{diff,unpatched,patched}.java",
+    "pre": "    // Methods Declaration\n    @Override\n    public <T> T deserialize(byte[] bytes) {\n        try (ByteArrayInputStream is = new ByteArrayInputStream(bytes)) {\n            Hessian2Input input = new Hessian2Input(is);\n           obj = (T) input.readObject();\n            input.close();\n        } catch (IOException e) {\n}\n",
+    "post": "    // Methods Declaration\n    @Override\n    public <T> T deserialize(byte[] bytes) {\n        try (ByteArrayInputStream is = new ByteArrayInputStream(bytes)) {\n            Hessian2Input input = new Hessian2Input(is);\n           input.setSerializerFactory(HessianSerializerFactory.getInstance());\n           obj = (T)input.readObject();\n            input.close();\n        } catch (IOException e) {\n}\n"
+  },
+  {
+    "patch_id": "CVE-2024-28213",
+    "cve": "CVE-2024-28213",
+    "vuln_type": "Insecure Deserialization",
+    "defense_method": "setObjectInputFilter",
+    "sink_method": "readObject",
+    "source": "release/ASRDataset.zip :: ASRDataset/GroundTruth/CVE-2024-28213/usage_pairs/CVE-2024-28213-ContextCheck-4f642135083b0201ce393b87991307b8-{diff,unpatched,patched}.java",
+    "pre": "// Methods Declaration\n\tstatic ConnectDetails read(InputStream in) throws CommunicationException {\n\t\t\tfinal ObjectInputStream objectInputStream = new ObjectInputStream(in);\n\t\t\tfinal ConnectionType type =\n\t\t\t\t(ConnectionType) objectInputStream.readObject();\n\t\t\tfinal Address address = (Address) objectInputStream.readObject();\n\t\t\treturn new ConnectDetails(type, address);\n\t\t}\n\t}\n}\n",
+    "post": "// Methods Declaration\n\tstatic ConnectDetails read(InputStream in) throws CommunicationException {\n\t\t\tfinal ObjectInputStream objectInputStream = new ObjectInputStream(in);\n\t\t\tobjectInputStream.setObjectInputFilter(filterInfo -> {if (filterInfo.serialClass() == null) {return ObjectInputFilter.Status.UNDECIDED;}if (Address.class.isAssignableFrom(filterInfo.serialClass())|| ConnectionType.class.isAssignableFrom(filterInfo.serialClass())|| Enum.class.isAssignableFrom(filterInfo.serialClass())|| filterInfo.serialClass().getCanonicalName().startsWith(\"net.grinder.engine\")|| filterInfo.serialClass().getCanonicalName().startsWith(\"net.grinder.common\")) {return ObjectInputFilter.Status.ALLOWED;}return ObjectInputFilter.Status.REJECTED;});\n\t\t\tfinal ConnectionType type =\n\t\t\t\t(ConnectionType) objectInputStream.readObject();\n\t\t\tfinal Address address = (Address) objectInputStream.readObject();\n\t\t\treturn new ConnectDetails(type, address);\n\t\t}\n\t}\n}\n"
+  },
+  {
+    "patch_id": "CVE-2024-36404",
+    "cve": "CVE-2024-36404",
+    "vuln_type": "Expression Injection",
+    "defense_method": "setFunctions",
+    "sink_method": "getValue",
+    "source": "release/ASRDataset.zip :: ASRDataset/GroundTruth/CVE-2024-36404/usage_pairs/CVE-2024-36404-BaseAnalysis-05e0004fdee410cc4c134c8de5842240-{diff,unpatched,patched}.java",
+    "pre": "     // Methods Declaration\n     public static String getSingleXPathValue(\n             NamespaceSupport ns, String xpathString, Document doc) {\n        JXPathContext context = initialiseContext(ns, doc);\n            Object ob = context.getValue(xpathString);\n             id = (String) ob;\n         } catch (RuntimeException e) {\n             throw new RuntimeException(\"Error reading xpath \" + xpathString, e);\n     }\n    // Methods Declaration\n}\n",
+    "post": "     // Methods Declaration\n     public static String getSingleXPathValue(\n             NamespaceSupport ns, String xpathString, Document doc) {\n            Object ob = JXPathUtils.newSafeContext(doc, true, ns, false).getValue(xpathString);\n             id = (String) ob;\n         } catch (RuntimeException e) {\n             throw new RuntimeException(\"Error reading xpath \" + xpathString, e);\n     }\n    // Methods Declaration\n    @SuppressWarnings(\"unchecked\")\n    public static JXPathContext newSafeContext(\n            Object contextBean, boolean lenient, NamespaceSupport ns, boolean declared) {\n        JXPathContext context = JXPathContext.newContext(contextBean);\n        context.setLenient(lenient);\n        if (ns != null) {\n            Enumeration<String> prefixes = declared ? ns.getDeclaredPrefixes() : ns.getPrefixes();\n            while (prefixes.hasMoreElements()) {\n                String prefix = prefixes.nextElement();\n                String uri = ns.getURI(prefix);\n                context.registerNamespace(prefix, uri);\n            }\n        }\n        // Set empty function library to prevent calling functions\n        context.setFunctions(new FunctionLibrary());\n        return context;\n    }\n}\n"
+  }
+]

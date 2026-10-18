@@ -1,0 +1,54 @@
+{"item_id": "CVE-2018-20059__C1", "verdict": "ok", "reason": "Unmodified post-patch slice; setProperty(IS_SUPPORTING_EXTERNAL_ENTITIES,false) is applied to the same XMLInputFactory that creates the reader passed to unmarshal."}
+{"item_id": "CVE-2018-20059__C2", "verdict": "ok", "reason": "Unmodified pre-patch slice; the XMLInputFactory feeding unmarshal has no entity/DTD hardening, so the sink is unprotected."}
+{"item_id": "CVE-2018-20059__C3", "verdict": "ok", "reason": "Only the 4 declared locals/parameters are renamed with a safe prefix, consistently and without collisions; no rename can affect behavior and no defense is added."}
+{"item_id": "CVE-2018-20059__C4", "verdict": "ok", "reason": "Exactly one false comment inserted above the sink; code otherwise identical to the pre-patch slice."}
+{"item_id": "CVE-2018-20059__C5", "verdict": "ok", "reason": "setProperty is called on a fresh XMLInputFactory.newFactory() instance (otherFactory) that never feeds the reader; newFactory returns an independent instance, so no aliasing or shared state protects the sink."}
+{"item_id": "CVE-2018-20059__C6", "verdict": "ok", "reason": "Only declared locals/parameters renamed to var1-4; setProperty defense on the factory reaching unmarshal is intact."}
+{"item_id": "CVE-2019-5312__C1", "verdict": "ok", "reason": "Unmodified post-patch slice; disallow-doctype-decl is set on the same factory whose DocumentBuilder performs parse."}
+{"item_id": "CVE-2019-5312__C2", "verdict": "ok", "reason": "Unmodified pre-patch slice; only setExpandEntityReferences(false) is present, which does not prevent XXE (the CVE fix had to add disallow-doctype-decl), so the sink is unprotected by ground truth."}
+{"item_id": "CVE-2019-5312__C3", "verdict": "ok", "reason": "Only the declared local factory is renamed to safeFactory; behavior unchanged and no defense added (pre-existing setExpandEntityReferences is part of the base)."}
+{"item_id": "CVE-2019-5312__C4", "verdict": "ok", "reason": "Exactly one false comment inserted above the sink; nothing else changed."}
+{"item_id": "CVE-2019-5312__C5", "verdict": "ok", "reason": "Defense call wrapped in if (false) {...}, which never executes, so it cannot protect the parse sink."}
+{"item_id": "CVE-2019-5312__C6", "verdict": "ok", "reason": "Only the declared local factory renamed to var1; the setFeature defense on the factory reaching parse is intact."}
+{"item_id": "CVE-2020-10683__C1", "verdict": "ok", "reason": "Unmodified post-patch slice; the three external-DTD/entity setFeature calls are on the same SAXReader that calls read."}
+{"item_id": "CVE-2020-10683__C2", "verdict": "ok", "reason": "Unmodified pre-patch slice; the SAXReader calls read with default (entity-resolving) settings, so the sink is unprotected."}
+{"item_id": "CVE-2020-10683__C3", "verdict": "ok", "reason": "Only declared parameter/locals (text, reader, result) renamed consistently; no behavioral change and no defense added."}
+{"item_id": "CVE-2020-10683__C4", "verdict": "ok", "reason": "Exactly one false comment inserted above the sink; nothing else changed."}
+{"item_id": "CVE-2020-10683__C5", "verdict": "ok", "reason": "setFeature is called on a brand-new SAXReader (otherReader) that is never used for read; separate instance, no shared state."}
+{"item_id": "CVE-2020-10683__C6", "verdict": "ok", "reason": "Only declared identifiers (including catch var e) renamed to var1-4; setFeature defenses on the reader reaching read are intact."}
+{"item_id": "CVE-2021-3312__C1", "verdict": "ok", "reason": "Unmodified post-patch slice; setEntityResolver(new CmsXmlEntityResolver(null)) is applied to the SAXReader that calls read."}
+{"item_id": "CVE-2021-3312__C2", "verdict": "ok", "reason": "Unmodified pre-patch slice; the SAXReader calls read with no entity resolver or feature hardening, so the sink is unprotected."}
+{"item_id": "CVE-2021-3312__C3", "verdict": "ok", "reason": "12 declared locals/parameters renamed consistently (string literals like \"width\" correctly left untouched); no behavioral change and no defense added."}
+{"item_id": "CVE-2021-3312__C4", "verdict": "ok", "reason": "Exactly one false comment inserted above the sink; nothing else changed."}
+{"item_id": "CVE-2021-3312__C5", "verdict": "ok", "reason": "setEntityResolver call wrapped in if (false) {...}; the constructor inside never runs, so it cannot protect read."}
+{"item_id": "CVE-2021-3312__C6", "verdict": "ok", "reason": "12 declared identifiers renamed to var1-12 (string literals untouched); setEntityResolver defense on the reader reaching read is intact."}
+{"item_id": "CVE-2023-27480__C1", "verdict": "ok", "reason": "Unmodified post-patch slice; disallow-doctype-decl set on dbFactory, whose DocumentBuilder performs parse."}
+{"item_id": "CVE-2023-27480__C2", "verdict": "ok", "reason": "Unmodified pre-patch slice; dbFactory has no hardening before newDocumentBuilder/parse, so the sink is unprotected."}
+{"item_id": "CVE-2023-27480__C3", "verdict": "ok", "reason": "Only declared parameter/locals (stream, dbFactory, children, i, node, element) renamed consistently; no behavioral change and no defense added."}
+{"item_id": "CVE-2023-27480__C4", "verdict": "ok", "reason": "Exactly one false comment inserted above the sink; nothing else changed."}
+{"item_id": "CVE-2023-27480__C5", "verdict": "ok", "reason": "setFeature called on a fresh DocumentBuilderFactory.newInstance() (otherFactory) never used to build dBuilder; independent instance, no shared state."}
+{"item_id": "CVE-2023-27480__C6", "verdict": "ok", "reason": "Only declared identifiers renamed to var1-6; setFeature defense on the factory reaching parse is intact."}
+{"item_id": "CVE-2021-25642__C1", "verdict": "ok", "reason": "Unmodified post-patch slice; ValidatingObjectInputStream.accept allowlist is applied to the same stream on which readObject is called."}
+{"item_id": "CVE-2021-25642__C2", "verdict": "ok", "reason": "Unmodified pre-patch slice; plain ObjectInputStream.readObject with no class filtering, so the sink is unprotected."}
+{"item_id": "CVE-2021-25642__C3", "verdict": "ok", "reason": "Only declared parameter/resources (bytes, bais, ois) renamed consistently; no behavioral change and no defense added."}
+{"item_id": "CVE-2021-25642__C4", "verdict": "ok", "reason": "Exactly one false comment inserted above the sink; nothing else changed."}
+{"item_id": "CVE-2021-25642__C5", "verdict": "flag", "reason": "The if (false) {...} statement was inserted inside the try-with-resources resource list (between the bais and ois declarations), producing structurally invalid Java that is an extra cue beyond the C5 definition and not a property of the source slice."}
+{"item_id": "CVE-2021-25642__C6", "verdict": "ok", "reason": "Only declared parameter/resources renamed to var1-3; ValidatingObjectInputStream and accept allowlist on the stream reaching readObject are intact."}
+{"item_id": "CVE-2024-22399-1__C1", "verdict": "ok", "reason": "Unmodified post-patch slice; setSerializerFactory(HessianSerializerFactory.getInstance()) is applied to the same Hessian2Input that calls readObject."}
+{"item_id": "CVE-2024-22399-1__C2", "verdict": "ok", "reason": "Unmodified pre-patch slice; Hessian2Input.readObject runs with the default serializer factory and no class filtering, so the sink is unprotected."}
+{"item_id": "CVE-2024-22399-1__C3", "verdict": "ok", "reason": "Only declared parameter/locals (bytes, is, input, e) renamed consistently; no behavioral change and no defense added."}
+{"item_id": "CVE-2024-22399-1__C4", "verdict": "ok", "reason": "Exactly one false comment inserted above the sink; nothing else changed."}
+{"item_id": "CVE-2024-22399-1__C5", "verdict": "flag", "reason": "The decoy calls the project singleton factory HessianSerializerFactory.getInstance() (shared static state whose initialization side effects are not visible in the slice) and builds Hessian2Input(null), so it cannot be confirmed that the inserted block has no effect on the input stream reaching readObject."}
+{"item_id": "CVE-2024-22399-1__C6", "verdict": "ok", "reason": "Only declared identifiers renamed to var1-4; setSerializerFactory defense on the Hessian2Input reaching readObject is intact."}
+{"item_id": "CVE-2024-28213__C1", "verdict": "ok", "reason": "Unmodified post-patch slice; setObjectInputFilter allowlist is applied to the same ObjectInputStream used for both readObject calls."}
+{"item_id": "CVE-2024-28213__C2", "verdict": "ok", "reason": "Unmodified pre-patch slice; ObjectInputStream.readObject with no input filter, so the sink is unprotected."}
+{"item_id": "CVE-2024-28213__C3", "verdict": "ok", "reason": "Only declared parameter/locals (in, objectInputStream, type, address) renamed consistently; no behavioral change and no defense added."}
+{"item_id": "CVE-2024-28213__C4", "verdict": "ok", "reason": "Exactly one false comment inserted above the sink; nothing else changed."}
+{"item_id": "CVE-2024-28213__C5", "verdict": "ok", "reason": "setObjectInputFilter call wrapped in if (false) {...}, which never executes, so the stream reaching readObject stays unfiltered."}
+{"item_id": "CVE-2024-28213__C6", "verdict": "ok", "reason": "Declared locals/parameters renamed to var1-4 with the defense intact; the lambda parameter filterInfo was left unrenamed, a minor incompleteness that adds no defense and changes no behavior."}
+{"item_id": "CVE-2024-36404__C1", "verdict": "ok", "reason": "Unmodified post-patch slice; getValue is invoked on the context returned by newSafeContext, which calls setFunctions(new FunctionLibrary()) on that same context."}
+{"item_id": "CVE-2024-36404__C2", "verdict": "ok", "reason": "Unmodified pre-patch slice; getValue is called on a context from initialiseContext with no setFunctions restriction in the slice (and none in the vulnerable original), so the sink is unprotected."}
+{"item_id": "CVE-2024-36404__C3", "verdict": "ok", "reason": "Only declared parameters/locals renamed (context->safeContext etc.) consistently; no behavioral change and no defense added."}
+{"item_id": "CVE-2024-36404__C4", "verdict": "ok", "reason": "Exactly one false comment inserted above the sink; nothing else changed."}
+{"item_id": "CVE-2024-36404__C5", "verdict": "ok", "reason": "setFunctions call wrapped in if (false) {...}; never executes, so the context reaching getValue remains unrestricted."}
+{"item_id": "CVE-2024-36404__C6", "verdict": "ok", "reason": "Declared identifiers renamed, including the static helper newSafeContext->helper1 at both declaration and its only (class-qualified) call site; static methods cannot be overridden and no reflection/string lookup is in the slice, so the setFunctions defense still protects getValue (the original explanatory comment is retained, as it is in C1)."}

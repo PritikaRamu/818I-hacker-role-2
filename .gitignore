@@ -1,0 +1,4 @@
+release/*.zip
+logs/
+__pycache__/
+*.pyc
