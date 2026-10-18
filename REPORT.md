@@ -2,7 +2,7 @@
 
 **Paper.** Bofei Chen, Shuang Liao, Lei Zhang, Chibin Zhang, Mathias Payer, Yuan Zhang. *Patch-Guided Vulnerability Detection: Extracting Java API Security Rules via Attack–Defense Cross-Analysis* (VulGenie). USENIX Security '26.
 
-Repo: https://github.com/PritikaRamu/8181-hacker-role-2.git
+Repo: https://github.com/PritikaRamu/818I-hacker-role-2.git
 
 Name: Pritika Ramu
 
